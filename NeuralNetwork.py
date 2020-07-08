@@ -23,7 +23,8 @@ def sigmoid(Z):
 
 def sigmoid_deravative(Z):
     s = 1/(1+np.exp(-Z))
-    return s
+    s_prime = s * (1-s)
+    return s_prime
 
 
 def forward_propagation(A_prev, W, b):
