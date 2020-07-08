@@ -182,14 +182,14 @@ def predict(X, y, parameters):
 # read the data set
 X,Y = make_moons(n_samples=2000, shuffle=True, noise=None, random_state=None)
 
-m = X.shape[0]
-Y = Y.reshape(m,1)
+X = X.T
+m = X.shape[1]
+Y = Y.reshape(1,m)
 
-print(Y.shape)
 margin = m//10*8
-print(margin)
-X_train, X_test = X[:margin, :].T, X[margin:, :].T
-Y_train, Y_test = Y[:margin, :].T, Y[margin:, :].T
+
+X_train, X_test = X[:, :margin], X[:, margin:]
+Y_train, Y_test = Y[:, :margin], Y[:, margin:]
 
 layer_units = [X_train.shape[0], 5, 3, 1]
 parameters = model(X_train, Y_train, layer_units, num_iterations = 10000)
