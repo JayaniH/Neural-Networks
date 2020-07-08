@@ -14,9 +14,6 @@ def initialize_parameters(layer_units):
         parameters['W' + str(l)] = np.random.randn(layer_units[l], layer_units[l-1]) 
         parameters['b' + str(l)] = np.zeros((layer_units[l],1))
         
-        #assert(parameters['W' + str(l)].shape == (layer_units[l], layer_units[l-1]))
-        #assert(parameters['b' + str(l)].shape == (layer_units[l], 1))
-        
     return parameters
 
 def sigmoid(Z):
@@ -26,7 +23,6 @@ def sigmoid(Z):
 
 def sigmoid_deravative(Z):
     s = 1/(1+np.exp(-Z))
-    #assert (dZ.shape == Z.shape)
     return s
 
 
@@ -43,7 +39,6 @@ def forward_propagation(A_prev, W, b):
     linear_cache = (A_prev, W, b)
     A = sigmoid(Z)
     
-    #assert (A.shape == (W.shape[0], A_prev.shape[1]))
     cache = (linear_cache, Z)
 
     return A, cache
@@ -60,9 +55,7 @@ def forward_propagation_layers(X, parameters):
         caches.append(cache)
     
     AL = A  #activation of the final layer(output)
-    
-    #assert(AL.shape == (1,X.shape[1]))
-            
+                
     return AL, caches
 
 
@@ -73,13 +66,7 @@ def compute_cost(AL, Y):
     m = Y.shape[1]
 
     cost = -(1/m) * np.sum((Y * np.log(AL)) + ((1-Y) * np. log(1-AL))) 
-    
-    # cost = -(1/m) * np.sum(np.multiply(Y, np.log(AL)) + np.multiply((1-Y), np.log(1-AL)))
-    # cost = np.mean(np.square(Y - np.round(AL)))
-    
-    #cost = np.squeeze(cost)      # To make sure your cost's shape is what we expect (e.g. this turns [[17]] into 17).
-    assert(cost.shape == ())
-    
+        
     return cost
 
 
@@ -103,7 +90,6 @@ def back_propagation(dA, cache):
 
     db = (1/m) * np.sum(dZ, axis=1, keepdims=True)
     dA_prev = np.dot(W.T,dZ)
-    #dA_prev, dW, db = linear_backward(dZ, linear_cache)
     
     return dA_prev, dW, db
 
@@ -115,11 +101,9 @@ def back_propagation_layers(AL, Y, caches):
     derivatives = {} # dictionary containing the computed derivatives for all weights and biases
     L = len(caches) # the number of layers
     m = AL.shape[1]
-    #Y = Y.reshape(AL.shape) # after this line, Y is the same shape as AL
     
     # derivative of cost w.r.t activation of the final layer
     dAL = - (Y/AL - (1 - Y)/ (1 - AL))
-    # dAL = np.divide(AL - Y, (1 - AL) *  AL)
     dA = dAL
     
     # Loop from l=L-1 to l=1
@@ -159,8 +143,6 @@ def model(X, Y, layer_units, learning_rate = 0.005, num_iterations = 5000):
     
         # back propagation - returns the derivatives of the cost w.r.t all the parameters
         derivatives = back_propagation_layers(AL, Y, caches)
-
-        #difference = gradient_check_n(parameters, derivatives, X, Y)
  
         # update the parameters
         parameters = update_parameters(parameters, derivatives, learning_rate)
@@ -197,42 +179,17 @@ def predict(X, y, parameters):
     return p
 
 
-#read the data set
-#data = np.genfromtxt('breast-cancer-wisconsin.data', delimiter=',')
+# read the data set
 X,Y = make_moons(n_samples=2000, shuffle=True, noise=None, random_state=None)
 
 m = X.shape[0]
 Y = Y.reshape(m,1)
-
-#remove rows with no value and remove 1st column(id)
-# data = data[~np.isnan(data).any(axis=1)]
-# data = np.delete(data, 0 , axis=1)
-
-# #length of the dataset
-# m = len(data)
-
-# #seperate features from labels
-# features, labels = data[:, :9], data[:, 9:]
-
-# #rename labels so that they take binary values
-# labels[labels == 2] = 0
-# labels[labels == 4] = 1
-
-# #normalize features
-# X_max, X_min = features.max(), features.min()
-# attributes = (features - X_min) / (X_max - X_min)
-
-# #shuffle and divde dataset into training set and test set
-# np.random.seed(3)
-# np.random.shuffle(data)
 
 print(Y.shape)
 margin = m//10*8
 print(margin)
 X_train, X_test = X[:margin, :].T, X[margin:, :].T
 Y_train, Y_test = Y[:margin, :].T, Y[margin:, :].T
-
-#print(X, Y)
 
 layer_units = [X_train.shape[0], 5, 3, 1]
 parameters = model(X_train, Y_train, layer_units, num_iterations = 10000)
