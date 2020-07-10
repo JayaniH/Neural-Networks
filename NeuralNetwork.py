@@ -126,7 +126,7 @@ def update_parameters(parameters, derivatives, learning_rate):
     return parameters
 
 
-def model(X, Y, layer_units, learning_rate = 0.005, num_iterations = 5000):
+def neural_network(X, Y, layer_units, learning_rate, num_iterations):
    
     #np.random.seed(1)
     costs = []
@@ -193,6 +193,6 @@ X_train, X_test = X[:, :margin], X[:, margin:]
 Y_train, Y_test = Y[:, :margin], Y[:, margin:]
 
 layer_units = [X_train.shape[0], 5, 3, 1]
-parameters = model(X_train, Y_train, layer_units, num_iterations = 10000)
+parameters = neural_network(X_train, Y_train, layer_units, 0.005, 10000)
 pred_train = predict(X_train, Y_train, parameters)
 pred_test = predict(X_test, Y_test, parameters)
